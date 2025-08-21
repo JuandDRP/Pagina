@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Propuesta Romántica ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #050611; --bg2: #0a1030; --accent: #ff4d8d; 
+      --accent2: #66e0ff; --gold: #ffd166; --pink: #ff5e9a;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      background: radial-gradient(1200px 600px at 70% 20%, #1a1e3b 0%, var(--bg2) 40%, var(--bg1) 100%);
+      font-family: "Poppins", system-ui, Segoe UI, Roboto, Arial;
+      overflow: hidden;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    /* Banner styling */
+    .banner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 30px 50px;
+      border-radius: 24px;
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      transform: translateY(20px);
+      opacity: 0;
+      filter: drop-shadow(0 8px 18px rgba(255, 255, 255, 0.1));
+      animation: bannerIn 1.2s ease-out 0.5s forwards;
+      text-align: center;
+      position: relative;
+      z-index: 20;
+      transition: all 0.8s ease;
+    }
+    
+    .clouds {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .cloud {
+      width: 46px;
+      height: 28px;
+      position: relative;
+      filter: drop-shadow(0 2px 6px rgba(255, 255, 255, 0.35));
+      transition: all 0.6s ease;
+    }
+    
+    .cloud:before, .cloud:after {
+      content: "";
+      position: absolute;
+      background: #fff;
+    }
+    
+    .cloud:before {
+      width: 46px;
+      height: 20px;
+      left: 0;
+      top: 8px;
+      border-radius: 20px;
+      opacity: 0.9;
+    }
+    
+    .cloud:after {
+      width: 22px;
+      height: 22px;
+      left: 10px;
+      top: 0;
+      border-radius: 50%;
+      opacity: 0.95;
+    }
+    
+    .heart {
+      width: 22px;
+      height: 22px;
+      position: relative;
+      transform: rotate(-45deg);
+      animation: pulse 1.5s infinite;
+      transition: all 0.6s ease;
+    }
+    
+    .heart:before, .heart:after {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    
+    .heart:before {
+      left: 11px;
+    }
+    
+    .heart:after {
+      top: -11px;
+    }
+    
+    .title {
+      font-weight: 800;
+      letter-spacing: 1px;
+      font-size: clamp(28px, 5vw, 64px);
+      text-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+      padding: 20px 0;
+      transition: all 0.3s ease;
+      animation: glow 3s infinite alternate, floatTitle 4s infinite ease-in-out;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+    }
+    
+    .beautiful-message {
+      font-weight: 800;
+      letter-spacing: 1px;
+      font-size: clamp(28px, 5vw, 64px);
+      text-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+      padding: 20px 0;
+      transition: all 0.3s ease;
+      animation: glow 3s infinite alternate, floatTitle 4s infinite ease-in-out;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      text-align: center;
+    }
+
+    /* Floating mini hearts */
+    .float-hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+    }
+    
+    .float-hearts span {
+      position: absolute;
+      font-size: 18px;
+      opacity: 0.7;
+      animation: float 6s linear infinite;
+    }
+
+    /* Rain container */
+    .rain-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0;
+      display: none;
+    }
+    
+    .love-word {
+      position: absolute;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--pink);
+      text-shadow: 0 2px 8px rgba(255, 100, 180, 0.6);
+      opacity: 0;
+      animation: rainDown 8s linear forwards;
+    }
+    
+    /* Final message */
+    .final-container {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 6;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      pointer-events: none;
+      transition: all 1.2s ease;
+    }
+    
+    .final {
+      font-size: clamp(24px, 4vw, 48px);
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(255, 150, 200, 0.8);
+      background: linear-gradient(45deg, #ff5e9a, #ffb6c1, #ff69b4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowFinal 2s infinite alternate;
+    }
+    
+    /* Buttons */
+    .buttons {
+      display: flex;
+      gap: 30px;
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeIn 1s ease 1s forwards;
+      z-index: 25;
+    }
+    
+    .btn {
+      padding: 14px 40px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      transform: translateY(10px);
+    }
+    
+    .btn-yes {
+      background: linear-gradient(45deg, var(--accent), #ff2e7a);
+      color: white;
+    }
+    
+    .btn-no {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+    
+    .btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+    
+    /* Animations */
+    @keyframes bannerIn {
+      from {
+        transform: translateY(20px) scale(0.97);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0.2;
+      }
+      50% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-140vh) translateX(-30px) scale(1.4);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: rotate(-45deg) scale(1);
+      }
+      50% {
+        transform: rotate(-45deg) scale(1.2);
+      }
+      100% {
+        transform: rotate(-45deg) scale(1);
+      }
+    }
+    
+    @keyframes glow {
+      0% {
+        text-shadow: 0 0 10px rgba(255, 100, 180, 0.6);
+      }
+      100% {
+        text-shadow: 0 0 30px rgba(255, 100, 180, 0.9), 0 0 60px rgba(255, 100, 180, 0.5);
+      }
+    }
+    
+    @keyframes floatTitle {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    
+    @keyframes explodeLetter {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+        opacity: 0;
+      }
+    }
+    
+    @keyframes rainDown {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes glowFinal {
+      0% {
+        text-shadow: 0 0 10px rgba(255, 100, 180, 0.6);
+      }
+      100% {
+        text-shadow: 0 0 25px rgba(255, 100, 180, 0.9), 0 0 50px rgba(255, 100, 180, 0.7);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulverize {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+        filter: blur(0);
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+        filter: blur(1px);
+      }
+      100% {
+        transform: scale(0);
+        opacity: 0;
+        filter: blur(20px);
+      }
+    }
+    
+    @keyframes breakApart {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) rotate(var(--rot));
+        opacity: 0;
+      }
+    }
+    
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    /* Particles container */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .banner {
+        padding: 20px 30px;
+      }
+      .buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+      .btn {
+        padding: 12px 30px;
+        font-size: 16px;
+      }
+      .title, .beautiful-message {
+        min-height: 100px;
+        font-size: clamp(24px, 6vw, 48px);
+      }
+      .final-container {
+        top: 45%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="particles"></div>
+  
+  <div class="float-hearts" id="float"></div>
+  
+  <div class="container">
+    <div class="banner" id="banner">
+      <div class="clouds" id="clouds1">
+        <div class="cloud"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="cloud"></div>
+      </div>
+      
+      <div class="title-wrapper">
+        <div class="title" id="title">
+          ¿QUIERES SER MI NOVIA?
+        </div>
+        <div class="beautiful-message" id="beautifulMessage">
+          ERES MI SOL, MI LUNA Y TODAS MIS ESTRELLAS
+        </div>
+      </div>
+      
+      <div class="clouds" id="clouds2">
+        <div class="cloud"></div>
+        <div class="heart"></div>
+        <div class="heart"></div>
+        <div class="cloud"></div>
+      </div>
+    </div>
+    
+    <div class="buttons" id="buttons">
+      <button class="btn btn-yes" id="btnYes">¡SÍ! ❤️</button>
+      <button class="btn btn-no" id="btnNo">No, gracias</button>
+    </div>
+  </div>
+  
+  <div class="rain-container" id="rain"></div>
+  
+  <div class="final-container" id="finalContainer">
+    <div class="final">I LOVE YOU</div>
+  </div>
+
+  <script>
+    // List of "I love you" in different languages
+    const lovePhrases = [
+      "TE AMO", // Spanish
+      "I LOVE YOU", // English
+      "JE T'AIME", // French
+      "ICH LIEBE DICH", // German
+      "TI AMO", // Italian
+      "愛してる", // Japanese (Aishiteru)
+      "사랑해", // Korean (Saranghae)
+      "Я ТЕБЯ ЛЮБЛЮ", // Russian (Ya tebya lyublyu)
+      "我爱你", // Chinese (Wo ai ni)
+      "MAHAL KITA", // Tagalog
+      "Σ'ΑΓΑΠΩ", // Greek (S'agapo)
+      "أحبك", // Arabic (Uhibbuka)
+      "मैं तुमसे प्यार करता हूँ", // Hindi (Main tumse pyaar karta hoon)
+      "IK HOU VAN JOU", // Dutch
+      "JAG ÄLSKAR DIG", // Swedish",
+      "Eu te amo", // Portuguese
+      "Szeretlek", // Hungarian
+      "Kocham Cię", // Polish
+      "ฉันรักคุณ", // Thai (Chan rak khun)
+      "Tôi yêu bạn", // Vietnamese
+      "Is breá liom tú", // Irish
+      "Rwy'n dy garu di" // Welsh
+    ];
+    
+    // Floating hearts
+    const floatC = document.getElementById('float');
+    for (let i = 0; i < 36; i++) {
+      const span = document.createElement('span');
+      span.textContent = '❤';
+      span.style.left = Math.random() * 100 + 'vw';
+      span.style.bottom = Math.random() * -100 + 'px';
+      span.style.animationDelay = Math.random() * 6 + 's';
+      span.style.fontSize = (12 + Math.random() * 22) + 'px';
+      span.style.color = i % 3 === 0 ? '#ff4d8d' : i % 3 === 1 ? '#66e0ff' : '#ffd166';
+      floatC.appendChild(span);
+    }
+    
+    // Particles background
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 150;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.style.position = 'absolute';
+      particle.style.width = Math.random() * 4 + 1 + 'px';
+      particle.style.height = particle.style.width;
+      particle.style.backgroundColor = '#ff5e9a';
+      particle.style.borderRadius = '50%';
+      particle.style.left = Math.random() * 100 + 'vw';
+      particle.style.top = Math.random() * 100 + 'vh';
+      particle.style.opacity = Math.random() * 0.6 + 0.1;
+      particle.style.boxShadow = '0 0 10px rgba(255, 100, 180, 0.7)';
+      particle.style.animation = `float ${Math.random() * 10 + 15}s linear infinite`;
+      particle.style.animationDelay = Math.random() * 5 + 's';
+      particlesContainer.appendChild(particle);
+    }
+    
+    // Love rain effect
+    function startLoveRain() {
+      const rainContainer = document.getElementById('rain');
+      rainContainer.style.display = 'block';
+      rainContainer.style.opacity = '1';
+      
+      // Create falling love words
+      setInterval(() => {
+        const word = document.createElement('div');
+        word.className = 'love-word';
+        word.textContent = lovePhrases[Math.floor(Math.random() * lovePhrases.length)];
+        word.style.left = Math.random() * 100 + 'vw';
+        word.style.animationDuration = (Math.random() * 5 + 8) + 's';
+        word.style.fontSize = (Math.random() * 10 + 20) + 'px';
+        word.style.animationDelay = Math.random() * 2 + 's';
+        word.style.opacity = Math.random() * 0.5 + 0.5;
+        rainContainer.appendChild(word);
+        
+        // Remove element after animation completes
+        setTimeout(() => {
+          word.remove();
+        }, 10000);
+      }, 300);
+    }
+    
+    // Pulverize everything effect
+    function pulverizeEverything() {
+      const banner = document.getElementById('banner');
+      const buttons = document.getElementById('buttons');
+      const title = document.getElementById('title');
+      const clouds1 = document.getElementById('clouds1');
+      const clouds2 = document.getElementById('clouds2');
+      
+      // Apply pulverize animation to banner
+      banner.style.animation = 'pulverize 1.2s forwards';
+      banner.style.pointerEvents = 'none';
+      
+      // Apply pulverize animation to buttons
+      buttons.style.animation = 'pulverize 1s forwards';
+      buttons.style.pointerEvents = 'none';
+      
+      // Break apart the title letters
+      const text = title.textContent;
+      title.textContent = '';
+      
+      // Create letter spans
+      for (let i = 0; i < text.length; i++) {
+        const letter = document.createElement('span');
+        letter.textContent = text[i];
+        letter.style.display = 'inline-block';
+        letter.style.transition = 'all 1.2s cubic-bezier(0.2, 0.6, 0.3, 1.5)';
+        title.appendChild(letter);
+      }
+      
+      // Add explosion effect to each letter
+      setTimeout(() => {
+        const letters = title.querySelectorAll('span');
+        letters.forEach((letter, index) => {
+          const angle = Math.random() * Math.PI * 2;
+          const distance = 100 + Math.random() * 150;
+          const rotation = (Math.random() - 0.5) * 360;
+          
+          letter.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+          letter.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+          letter.style.setProperty('--rot', `${rotation}deg`);
+          
+          letter.style.animation = `breakApart 1.2s cubic-bezier(0.2, 0.6, 0.3, 1.5) forwards`;
+          letter.style.animationDelay = `${index * 0.05}s`;
+        });
+      }, 100);
+      
+      // Break apart the clouds and hearts
+      const elements = [...clouds1.children, ...clouds2.children];
+      elements.forEach((element, index) => {
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 100 + Math.random() * 150;
+        const rotation = (Math.random() - 0.5) * 360;
+        
+        element.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
+        element.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
+        element.style.setProperty('--rot', `${rotation}deg`);
+        
+        element.style.animation = `breakApart 1.2s cubic-bezier(0.2, 0.6, 0.3, 1.5) forwards`;
+        element.style.animationDelay = `${index * 0.05}s`;
+      });
+      
+      // Hide everything after animation
+      setTimeout(() => {
+        banner.style.display = 'none';
+        buttons.style.display = 'none';
+      }, 1200);
+    }
+    
+    // Button event handlers
+    document.getElementById('btnYes').addEventListener('click', () => {
+      // Hide the original title
+      const title = document.getElementById('title');
+      title.style.opacity = '0';
+      title.style.transform = 'scale(0.8)';
+      
+      // Show the beautiful message in the exact same position
+      const message = document.getElementById('beautifulMessage');
+      message.style.opacity = '1';
+      message.style.animation = 'fadeInScale 1.2s forwards, glow 3s infinite alternate, floatTitle 4s infinite ease-in-out';
+      
+      // Hide buttons
+      document.getElementById('buttons').style.opacity = '0';
+      document.getElementById('buttons').style.pointerEvents = 'none';
+      
+      // Change banner appearance
+      const banner = document.getElementById('banner');
+      banner.style.background = 'rgba(255, 255, 255, 0.15)';
+      banner.style.boxShadow = '0 20px 40px rgba(255, 100, 180, 0.5)';
+      
+      // Show final message
+      setTimeout(() => {
+        document.getElementById('finalContainer').style.opacity = '1';
+        document.getElementById('finalContainer').style.top = '30%';
+        document.getElementById('finalContainer').style.transform = 'translate(-50%, -50%)';
+      }, 1500);
+      
+      // Start love rain
+      startLoveRain();
+    });
+    
+    document.getElementById('btnNo').addEventListener('click', () => {
+      // Pulverize everything
+      
+      // Move button to random position
+      const btnNo = document.getElementById('btnNo');
+      const maxX = window.innerWidth - btnNo.offsetWidth;
+      const maxY = window.innerHeight - btnNo.offsetHeight;
+      
+      btnNo.style.position = 'absolute';
+      btnNo.style.left = Math.random() * maxX + 'px';
+      btnNo.style.top = Math.random() * maxY + 'px';
+      
+      // Change button text after first click
+      btnNo.textContent = "¿Segura? 😢";
+      
+      // Change button text on subsequent clicks
+      let clicks = 0;
+      const noClickHandler = () => {
+        clicks++;
+        if (clicks === 1) {
+          btnNo.textContent = "Por favor ❤️";
+        } else if (clicks === 2) {
+          btnNo.textContent = "Te lo ruego 🥺";
+        } else if (clicks >= 3) {
+          btnNo.textContent = "¡SÍ! ❤️";
+          btnNo.classList.remove('btn-no');
+          btnNo.classList.add('btn-yes');
+          btnNo.style.position = 'static';
+          
+          // Remove the extra event listeners
+          btnNo.removeEventListener('click', noClickHandler);
+          
+          // Simulate yes click
+          setTimeout(() => {
+            document.getElementById('btnYes').click();
+          }, 500);
+        }
+      };
+      
+      btnNo.addEventListener('click', noClickHandler);
+    });
+  </script>
+</body>
+</html>
